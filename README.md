@@ -2,6 +2,8 @@
 
 Vite + React + TypeScript；HW2 使用 [three.js](https://threejs.org/)。
 
+線上版本（push 到 main 後由 GitHub Actions 自動部署）：https://grasonyang.github.io/Web-Graphic-learning/#/hw1
+
 | 作業 | 路徑 | 原始碼 |
 | --- | --- | --- |
 | HW1 Canvas 粒子煙火 | `#/hw1` | `src/hw1/` |
