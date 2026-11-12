@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--
+  L01 實作：夜空小風景（只用 Canvas 2D 基本 API）
+  開啟方式：npm run dev → http://localhost:5173/labs/lec01.html
+           （或直接用瀏覽器打開這個檔案也可以）
+  對照白板：L01 區塊 6~9
+-->
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>L01 Lab · Canvas 基礎</title>
+  <style>
+    body { background: #222; color: #ddd; font-family: system-ui; }
+    canvas { border: 1px solid #888; display: block; margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <h1>L01 Lab · 夜空小風景</h1>
+  <canvas id="myCanvas" width="500" height="300"></canvas>
+
+  <script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
+
+    // ───────────────────────────────────────────────
+    // TODO 1：夜空
+    //   用 ctx.createLinearGradient(0, 0, 0, H) 做「由上到下」的漸層
+    //   addColorStop(0, 深藍) / addColorStop(1, 偏紫或偏橘)
+    //   設成 fillStyle 後 fillRect 填滿整張畫布
+    //   ✔ 看到：整張畫布由上到下顏色漸變
+    // ───────────────────────────────────────────────
+
+
+    // ───────────────────────────────────────────────
+    // TODO 2：月亮
+    //   createRadialGradient(x, y, 小半徑, x, y, 大半徑)
+    //   中心白、外圈透明（'rgba(255,255,255,0)'），做出光暈
+    //   再用 beginPath + arc + fill 畫一個實心月亮
+    //   ✔ 看到：右上角一顆有光暈的月亮
+    // ───────────────────────────────────────────────
+
+
+    // ───────────────────────────────────────────────
+    // TODO 3：星星
+    //   for 迴圈 20 次，每次 Math.random() 決定 x、y、半徑(0.5~2)
+    //   ★ 每一顆都要 beginPath()，想想看不加會怎樣？
+    //   ✔ 看到：天空散落 20 顆小白點
+    // ───────────────────────────────────────────────
+
+
+    // ───────────────────────────────────────────────
+    // TODO 4：山
+    //   beginPath → moveTo(左下) → lineTo(山頂) → lineTo(右下)
+    //   → closePath() → fill()
+    //   試著畫兩座不同顏色、互相重疊的山（後畫的蓋在前面）
+    // ───────────────────────────────────────────────
+
+
+    // ───────────────────────────────────────────────
+    // TODO 5：地面 + 標題
+    //   fillRect 畫一條地面
+    //   ctx.font = '24px sans-serif'; fillText('我的夜空', x, y)
+    //   加分：strokeText 加外框
+    // ───────────────────────────────────────────────
+
+
+    // ───────────────────────────────────────────────
+    // 加分：照講義畫笑臉（注意每個 arc 前的 moveTo）
+    // ───────────────────────────────────────────────
+  </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!--
+  L02 實作 B：時鐘（translate / rotate / save / restore）
+  開啟方式：npm run dev → http://localhost:5173/labs/lec02-clock.html
+  對照白板：L02 區塊 5~7
+-->
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>L02 Lab · Clock</title>
+  <style>
+    body { background: #f4f1ea; font-family: system-ui; }
+    canvas { display: block; margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <h1>L02 Lab · 時鐘</h1>
+  <canvas id="canvas" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const g = canvas.getContext('2d');
+    const radius = (canvas.height / 2) * 0.9;
+
+    function drawClock() {
+      g.save();
+      g.clearRect(0, 0, canvas.width, canvas.height);
+      g.translate(canvas.width / 2, canvas.height / 2); // 原點 → 鐘心
+      drawFace();
+      drawText();
+      drawTime();
+      g.restore();
+    }
+
+    function drawFace() {
+      // 外圈
+      g.beginPath();
+      g.arc(0, 0, radius, 0, 2 * Math.PI);
+      g.fillStyle = 'white';
+      g.fill();
+      // TODO 1：用 createRadialGradient(0,0,radius*0.95, 0,0,radius*1.05)
+      //   當 strokeStyle、lineWidth = radius * 0.1，再 stroke() 做出金屬外框
+
+      // 中心點
+      g.beginPath();
+      g.arc(0, 0, radius * 0.05, 0, 2 * Math.PI);
+      g.fillStyle = '#333';
+      g.fill();
+    }
+
+    function drawText() {
+      g.font = radius * 0.15 + 'px arial';
+      g.textBaseline = 'middle';
+      g.textAlign = 'center';
+      g.fillStyle = '#333';
+      for (let i = 1; i <= 12; i++) {
+        // TODO 2：save → rotate(i * π/6) → translate(0, -radius * 0.85)
+        //   → fillText(i, 0, 0) → restore
+        // 實驗：把 rotate 和 translate 對調，看看會發生什麼？
+        // 實驗：在 fillText 前加 rotate(-i * π/6)，數字會變正
+      }
+    }
+
+    function drawTime() {
+      const now = new Date();
+      // TODO 3：算出三根針的角度（度）
+      //   秒：秒 × 6
+      //   分：(分 + 秒/60) × 6
+      //   時：((時 % 12) + 分/60 + 秒/3600) × 30
+      // 然後呼叫 drawHand(角度, 長度, 寬度)
+    }
+
+    function drawHand(angleDeg, length, width) {
+      // TODO 4：save → beginPath → lineWidth / lineCap='round'
+      //   → rotate(angleDeg * π/180) → moveTo(0,0) → lineTo(0, -length)
+      //   → stroke → restore
+    }
+
+    drawClock();
+    setInterval(drawClock, 1000);
+    // 加分：改用 requestAnimationFrame + 毫秒，讓秒針平滑移動
+  </script>
+</body>
+</html>

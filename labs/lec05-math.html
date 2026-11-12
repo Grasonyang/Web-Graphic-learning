@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--
+  L05 實作：自己寫向量 / 矩陣函式，並用 canvas 視覺化內積
+  開啟方式：npm run dev → http://localhost:5173/labs/lec05-math.html
+  打開瀏覽器 DevTools 的 Console 看測試結果（全部 ✅ 才算過）
+  對照白板：L05 全部
+-->
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>L05 Lab · Math for CG</title>
+  <style>
+    body { background: #fafafa; font-family: system-ui; }
+    canvas { border: 1px solid #ccc; display: block; margin: 16px 0; }
+    #info { font: 16px monospace; }
+  </style>
+</head>
+<body>
+  <h1>L05 Lab · 向量與矩陣</h1>
+  <p>移動滑鼠改變向量 b，觀察 a·b 與夾角。</p>
+  <canvas id="c" width="500" height="500"></canvas>
+  <div id="info"></div>
+
+  <script>
+    // ═════════ 1. 向量（用陣列 [x, y] 或 [x, y, z]）═════════
+    // TODO：完成下面每個函式（提示都在白板 L05 區塊 2、4、5）
+    const add = (a, b) => { /* TODO */ };
+    const sub = (a, b) => { /* TODO */ };
+    const scale = (a, s) => { /* TODO */ };
+    const length = (a) => { /* TODO：√(x²+y²+…) */ };
+    const normalize = (a) => { /* TODO */ };
+    const dot = (a, b) => { /* TODO */ };
+    const cross = (a, b) => { /* TODO：只用在 3D */ };
+    const angleDeg = (a, b) => { /* TODO：acos(a·b / (|a||b|)) 轉成度 */ };
+
+    // ═════════ 2. 矩陣（二維陣列 A[i][j]）═════════
+    const matMul = (A, B) => { /* TODO：三層迴圈，cij = Σ aik·bkj */ };
+    const transpose = (A) => { /* TODO */ };
+    // 3×3 齊次座標矩陣
+    const T = (dx, dy) => [[1, 0, dx], [0, 1, dy], [0, 0, 1]];
+    const R = (rad) => { /* TODO：旋轉矩陣 */ };
+    const S = (sx, sy) => { /* TODO：縮放矩陣 */ };
+    // 把點 [x, y] 用 3×3 矩陣 M 變換，回傳 [x', y']
+    const apply = (M, [x, y]) => { /* TODO：M · [x, y, 1]ᵀ */ };
+
+    // ═════════ 3. 自動測試（不用改）═════════
+    const near = (a, b) => JSON.stringify(a?.map?.((v) => (Array.isArray(v) ? v.map((u) => +u.toFixed(6)) : +v.toFixed(6)))) ===
+      JSON.stringify(b);
+    const check = (name, got, want) => {
+      const ok = typeof want === 'number' ? Math.abs(got - want) < 1e-6 : near(got, want);
+      console.log(ok ? '✅' : '❌', name, ok ? '' : { got, want });
+    };
+    try {
+      check('add', add([1, 2], [3, 4]), [4, 6]);
+      check('sub', sub([1, 2], [3, 4]), [-2, -2]);
+      check('scale', scale([1, 2], 3), [3, 6]);
+      check('length', length([3, 4]), 5);
+      check('normalize', normalize([3, 4]), [0.6, 0.8]);
+      check('dot ⟂', dot([1, 0, 0], [0, 1, 0]), 0);
+      check('dot', dot([1, 2, 3], [4, 5, 6]), 32);
+      check('cross x×y=z', cross([1, 0, 0], [0, 1, 0]), [0, 0, 1]);
+      check('cross y×x=-z', cross([0, 1, 0], [1, 0, 0]), [0, 0, -1]);
+      check('angle 45°', angleDeg([1, 0], [1, 1]), 45);
+      check('matMul', matMul([[1, 2], [3, 4]], [[5, 6], [7, 8]]), [[19, 22], [43, 50]]);
+      check('matMul 反過來', matMul([[5, 6], [7, 8]], [[1, 2], [3, 4]]), [[23, 34], [31, 46]]);
+      check('transpose', transpose([[1, 2, 3], [4, 5, 6]]), [[1, 4], [2, 5], [3, 6]]);
+      check('R(90°)·(1,0)', apply(R(Math.PI / 2), [1, 0]), [0, 1]);
+      check('T·R·P', apply(matMul(T(5, 0), R(Math.PI / 2)), [1, 0]), [5, 1]);
+      check('R·T·P', apply(matMul(R(Math.PI / 2), T(5, 0)), [1, 0]), [0, 6]);
+    } catch (e) {
+      console.error('還有函式沒完成：', e.message);
+    }
+
+    // ═════════ 4. 視覺化內積 ═════════
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const info = document.getElementById('info');
+    const O = [250, 250];          // 原點畫在中央
+    const a = [150, 0];            // 固定向量 a
+    let b = [100, -100];
+
+    function arrow(v, color) {
+      // TODO：從 O 畫線到 O + v，並在尾端畫一個小三角形箭頭
+      //   提示：箭頭方向 = normalize(v)，用 Math.atan2(v[1], v[0]) 算角度後 rotate
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      // TODO：b = 滑鼠位置 − O
+    });
+
+    function loop() {
+      ctx.clearRect(0, 0, 500, 500);
+      arrow(a, 'crimson');
+      arrow(b, 'royalblue');
+      // TODO：info.textContent = `a·b = … , θ = …°`
+      //   注意：canvas 的 y 朝下，所以「看起來往上」的 b 其實 y 是負的
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    // 加分：不用 ctx.rotate，只用 apply(R(θ), 點) 把一個三角形的三個頂點轉起來
+  </script>
+</body>
+</html>

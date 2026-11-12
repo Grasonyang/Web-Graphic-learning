@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!--
+  L06 實作：Hello Cube → 多個幾何體 → OrbitControls → 響應式
+  開啟方式：必須用 npm run dev → http://localhost:5173/labs/lec06-cubes.html
+           （import 'three' 靠 Vite 從 node_modules 解析；直接雙擊檔案會失敗）
+  對照白板：L06 區塊 1~9
+-->
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>L06 Lab · three.js</title>
+  <style>
+    html, body { margin: 0; height: 100%; }
+    #c { width: 100%; height: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+    const canvas = document.getElementById('c');
+
+    // ① renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+
+    // ② camera
+    const camera = new THREE.PerspectiveCamera(75, 2, 0.1, 100);
+    camera.position.z = 4;
+
+    // ③ scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x202530);
+
+    // 光：DirectionalLight 從左上前方照過來
+    const light = new THREE.DirectionalLight(0xffffff, 3);
+    light.position.set(-1, 2, 4);
+    scene.add(light);
+
+    // ④⑤⑥ geometry + material → mesh → scene.add
+    function makeInstance(geometry, color, x) {
+      const material = new THREE.MeshPhongMaterial({ color });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.x = x;
+      scene.add(mesh);
+      return mesh;
+    }
+
+    const shapes = [
+      makeInstance(new THREE.BoxGeometry(1, 1, 1), 0x44aa88, 0),
+      // TODO 1（講義 Lab）：再加 2 個方塊，不同顏色、x = -2 與 +2
+      // TODO 2：把其中幾個換成 SphereGeometry / ConeGeometry / TorusGeometry / TorusKnotGeometry
+      // TODO 3：其中一個用 MeshBasicMaterial({ color, wireframe: true })，
+      //         觀察它「不受光」而且看得到三角形
+    ];
+
+    // TODO 4：OrbitControls
+    //   const controls = new OrbitControls(camera, renderer.domElement);
+    //   拖曳看看；想想看：為什麼不用在 render 裡呼叫 controls.update()？
+
+    // TODO 5：響應式 —— 完成這個函式，並在 render 裡用它
+    function resizeRendererToDisplaySize(renderer) {
+      // canvas.clientWidth/Height（CSS 大小）≠ canvas.width/height（像素）時
+      //   → renderer.setSize(w, h, false) 並回傳 true
+      return false;
+    }
+
+    function render(time) {
+      time *= 0.001; // 毫秒 → 秒
+
+      if (resizeRendererToDisplaySize(renderer)) {
+        // TODO 6：更新 camera.aspect 與 camera.updateProjectionMatrix()
+      }
+
+      shapes.forEach((mesh, i) => {
+        const speed = 1 + i * 0.2; // 每個轉速不同
+        mesh.rotation.x = time * speed;
+        mesh.rotation.y = time * speed;
+      });
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    // 加分（HW2 暖身）：
+    //   1. 把光換成 PointLight(0xffffff, 30)，每幀 position.set(cos(t)*3, 1, sin(t)*3)
+    //   2. 加一個小球 MeshBasicMaterial 當作燈泡，pointLight.add(小球)
+    //   3. 做一個 Group，把三個 mesh 放進去，轉 group 看看整組一起轉
+  </script>
+</body>
+</html>

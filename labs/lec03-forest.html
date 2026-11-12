@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--
+  L03 實作：碎形圓 → 遞迴樹 → 森林（HW1 背景的前身）
+  開啟方式：npm run dev → http://localhost:5173/labs/lec03-forest.html
+  對照白板：L03 全部
+-->
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>L03 Lab · Fractal Forest</title>
+  <style>
+    body { background: #0d1117; color: #ddd; font-family: system-ui; }
+    canvas { border: 1px solid #444; display: block; margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <h1>L03 Lab</h1>
+  <h2>A. 碎形圓</h2>
+  <canvas id="circles" width="640" height="360"></canvas>
+  <h2>B. 遞迴樹</h2>
+  <canvas id="tree" width="640" height="400"></canvas>
+  <h2>C. 森林</h2>
+  <canvas id="forest" width="900" height="420"></canvas>
+
+  <script>
+    // ═════════════ A. 碎形圓 ═════════════
+    {
+      const ctx = document.getElementById('circles').getContext('2d');
+      ctx.strokeStyle = '#9cf';
+
+      function drawCircle(x, y, r) {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.stroke();
+        // TODO A1：if (r > 2) 遞迴畫左右兩個半徑一半的圓（圓心在 x ± r）
+        // TODO A2（加分）：再加上下兩個分支（y ± r）
+        // 實驗：console.log(r) 看看呼叫順序
+      }
+      drawCircle(320, 180, 160);
+    }
+
+    // ═════════════ B. 遞迴樹 ═════════════
+    {
+      const canvas = document.getElementById('tree');
+      const ctx = canvas.getContext('2d');
+      const theta = 25; // 分岔角度（度）
+
+      function line(x1, y1, x2, y2, width = 3) {
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+
+      function branch(len) {
+        // TODO B1：顏色 —— 長的是樹幹(褐)、短的是葉子(綠)
+        //   ★ strokeStyle 要在 line() 之前設定
+        // TODO B2：line(0, 0, 0, -len, 線寬)；線寬試試 len * 0.1
+        // TODO B3：translate(0, -len) 把原點移到樹枝頂端
+        // TODO B4：len *= 0.66
+        // TODO B5：if (len > 2) {
+        //            save → rotate(+θ) → branch(len) → restore
+        //            save → rotate(-θ) → branch(len) → restore
+        //          }
+        // 實驗：拿掉 save/restore 會長怎樣？為什麼？
+      }
+
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height); // 樹根：底部中央
+      branch(110);
+      ctx.restore();
+    }
+
+    // ═════════════ C. 森林 ═════════════
+    {
+      const canvas = document.getElementById('forest');
+      const ctx = canvas.getContext('2d');
+
+      class Tree {
+        constructor(x, groundY, len, theta, color) {
+          this.x = x;
+          this.groundY = groundY;
+          this.len = len;
+          this.theta = theta;
+          this.color = color;
+        }
+        draw(g) {
+          // TODO C1：save → translate(this.x, this.groundY)
+          //   → strokeStyle → this.branch(g, this.len) → restore
+        }
+        branch(g, len) {
+          // TODO C2：把 B 的 branch 搬過來，角度改用 this.theta
+          //   ★ 用參數 g 而不是全域 ctx
+        }
+      }
+
+      // TODO C3：夜空背景（線性漸層）+ 隨機星星（L01 學過）
+
+      // TODO C4：for 迴圈種 12 棵樹
+      //   const far = Math.random();          // 0 = 近、1 = 遠
+      //   x = 隨機；groundY = canvas.height - far * 60
+      //   len = 40 + (1 - far) * 70           // 遠的矮
+      //   color = `hsl(${110 + far * 40}, 40%, ${25 + far * 20}%)`
+      // TODO C5：依 len 由小到大排序後再畫（遠的先畫，近的蓋在上面）
+
+      // TODO C6（HW1 準備）：改成畫到「離屏 canvas」
+      //   const off = document.createElement('canvas');
+      //   off.width = canvas.width; off.height = canvas.height;
+      //   在 off 上畫完森林，最後 ctx.drawImage(off, 0, 0)
+      //   想想看：為什麼 HW1 要這樣做？（提示：Math.random 與每幀重畫）
+    }
+  </script>
+</body>
+</html>
