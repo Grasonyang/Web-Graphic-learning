@@ -39,6 +39,24 @@ npm run preview   # 預覽 build 結果
 
 ## 參考來源
 
+### HW1
+
+講義頁數以 `docs/` 內 PDF 的頁碼為準。
+
+| 程式 | 來源 |
+| --- | --- |
+| `Particle` 類別結構（位置、顏色、alpha、`draw` / `update`） | lec02 p.33–34；**學生自行撰寫** |
+| 重力 `vy += gravity`、`x += vx` | lec02 p.39（Add gravity force：v(n+1) = v(n) + a·t） |
+| 隨機角度 + `cos` / `sin` 分解初速 | 自行修改（講義為 `(Math.random() - 0.5) * 8`），Claude Code 建議 |
+| 一次爆炸產生多顆粒子 | lec02 p.35–36（Firework 類別） |
+| 隨機 rgb 顏色、`rgba(0,0,0,0.1)` 殘影、`requestAnimationFrame` 迴圈、`splice` 移除 | lec02 p.37–38 |
+| 點擊事件 `addEventListener('click')` | lec02 p.8 |
+| 從後往前刪除、alpha 先檢查再畫（修正最後閃一下） | Claude Code 協助修正 |
+| React 外殼（`useRef`、`useEffect`、`ResizeObserver`、`devicePixelRatio`） | 講義未涵蓋，Claude Code 協助撰寫 |
+| 煙火範例原始出處 | lec02 p.30 標註「Source: Coding Fireworks」 |
+
+### 其他
+
 - 課程講義 lec02（Canvas 粒子／煙火範例：Particle、Firework 類別與 animate 迴圈）
 - 課程講義 lec06-1（Three.js Geometry、Material、Light）
 - three.js 官方文件：https://threejs.org/docs/
